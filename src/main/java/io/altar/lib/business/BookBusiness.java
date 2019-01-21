@@ -27,6 +27,12 @@ public class BookBusiness {
 	HistoryRepository historyRepository;
 	@Inject
 	HistoryBusiness historyBusiness;
+	
+	/**
+	 * createBook é uma função que adiciona um livro novo à base de dados
+	 * @param bookToCreate é o livro que se pretende criar
+	 * @return devolve o livro que se criou depois de o ir buscar à base de dados
+	 */
 
 	@Transactional
 	public Book createBook(Book bookToCreate) {
@@ -35,6 +41,12 @@ public class BookBusiness {
 		return bookRepository.save(bookToCreate);
 	}
 
+	/**
+	 * 
+	 * @param bookIdToGet é  o id do livro do qual se quer ver os detalhes
+	 * @return se existir devolve o livro que se quer ver, se não existir devolve null
+	 */
+	
 	public Book getABook(long bookIdToGet) {
 		if (bookRepository.findById(bookIdToGet) != null) {
 			if (!bookRepository.findById(bookIdToGet).isInLibraryPosession()) {
@@ -46,6 +58,10 @@ public class BookBusiness {
 		}
 	}
 
+	/**
+	 * 
+	 * @return devolve conjunto de livros presentes na biblioteca
+	 */
 	public ArrayList<Book> seeAllBooks() {
 		ArrayList<Book> bookRepository1 = new ArrayList<Book>();
 		for (Book item : bookRepository.getAll()) {
@@ -56,6 +72,13 @@ public class BookBusiness {
 		return bookRepository1;
 	}
 
+	/**
+	 * 
+	 * @param bookIdToRemove é o id do livro que se quer remover
+	 * @return null se não existir o livro e o próprio livro com booleano que representa a sua existência 
+	 * na biblioteca, inLibraryPosession, como falso
+	 *
+	 */
 	@Transactional
 	public Book removeBook(long bookIdToRemove) {
 		if (bookRepository.findById(bookIdToRemove) != null) {
@@ -67,6 +90,14 @@ public class BookBusiness {
 		return null;
 	}
 
+	/**
+	 * Procura a expressão-chave fornecida no título, na descrição, no autor, no tópico e no isbn e devolve
+	 * os livros agrupados por isbn que contenham a mesma nalgum destes parâmetros (função insensível a 
+	 * maiúculas e minúsculas)
+	 * @param keyExpression é uma expressão-chave pela qual se quer procurar o livro
+	 * @return os livros (agrupados por isbn) que contenham a expressão-chave num destes parâmetros: título, 
+	 * na descrição, no autor, no tópico e no isbn
+	 */
 	public ArrayList<BookDTO> generalResearchForBook(String keyExpression) {
 		ArrayList<BookDTO> allBookDTOs = new ArrayList<BookDTO>();
 		ArrayList<BookDTO> resultToKeyExpression = new ArrayList<BookDTO>();
@@ -117,6 +148,12 @@ public class BookBusiness {
 		return false;
 	}
 
+	/**
+	 * 
+	 * @param updatedBook é o livro com os atributos que se quer mudar
+	 * @return o próprio livro da base de dados,já alterado ou null se não existir nenhum livro com
+	 * o id fornecido
+	 */
 	@Transactional
 	public Book updateBook(Book updatedBook) {
 		if (bookRepository.findById(updatedBook.getId()) != null) {

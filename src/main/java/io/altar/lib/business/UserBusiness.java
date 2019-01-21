@@ -431,7 +431,7 @@ public class UserBusiness {
 	 * @param content1
 	 */
 
-	public void sendEmail(String emailto, String subject, String content1) {
+	/*public void sendEmail(String emailto, String subject, String content1) {
 		System.out.println("Entra no send Email"); // verificar emails
 		Email from = new Email("geral@biblioteca4.com");
 		Email to = new Email(emailto);
@@ -449,7 +449,7 @@ public class UserBusiness {
 		} catch (IOException ex) {
 			System.out.println(ex);
 		}
-	}
+	}*/
 
 	public ArrayList<User> getACertainAmountOfUsersFromACertainIndex(int indexToStart, int amount) {
 		ArrayList<User> allUsers=new ArrayList<User>();
