@@ -30,6 +30,11 @@ public class HistoryBusiness {
 	@Inject
 	UserBusiness userBusiness;
 
+	/**
+	 * 
+	 * @param newHistory histórico a adicionar
+	 * @return o histórico que foi adicionado à base de dados
+	 */
 	@Transactional
 	public History reserveBookHistory(History newHistory) {
 		Book formerBook = bookRepository.findById(newHistory.getHistoryBook().getId());
@@ -65,6 +70,11 @@ public class HistoryBusiness {
 		return null;
 	}
 
+	/**
+	 * 
+	 * @param bookToPickUp livro que se pretende levantar
+	 * @return histórico alterado coma data de levantamento do livro
+	 */
 	@Transactional
 	public History pickUpBook(Book bookToPickUp) {
 		for (History item : historyRepository.getAll()) {
@@ -85,6 +95,11 @@ public class HistoryBusiness {
 		return null;
 	}
 
+	/**
+	 * 
+	 * @param bookToDeliver livro que se pretende entregar
+	 * @return histórico associado alterado com a adição da data de entrega
+	 */
 	@Transactional
 	public History deliverBook(Book bookToDeliver) {
 		for (History item : historyRepository.getAll()) {
@@ -102,6 +117,11 @@ public class HistoryBusiness {
 		return null;
 	}
 
+	/**
+	 * 
+	 * @param bookId id do livro que estava pré-reservado por algum utilizador e que
+	 * se pretende que passe a estar reservado por este
+	 */
 	@Transactional
 	public void turnPrereservationIntoReservation(long bookId) {
 		Date newDate=new Date();
@@ -112,6 +132,11 @@ public class HistoryBusiness {
 		}
 	}
 	
+	/**
+	 * 
+	 * @param idBook id do livro do qual se pretende saber o utilizador associado
+	 * @return o user que já levantou livro mas ainda não o devolveu
+	 */
 	public User getUserWithBook(long idBook) {
 		for (History item : historyRepository.getAll()) {
 			if (item.getDeliveryDate() == null && item.getReservationDate() != null
@@ -122,6 +147,12 @@ public class HistoryBusiness {
 		return null;
 	}
 
+	/**
+	 * 
+	 * @param idUser id do utilizador do qual se pretende saber os livros associados
+	 * @return a lista de livros que já foram levantados mas ainda não foram devolvidos por
+	 * este user
+	 */
 	public ArrayList<History> getBooksWithUser(long idUser) {
 		ArrayList<History> resultToBooksWithUser = new ArrayList<History>();
 		for (History item : historyRepository.getAll()) {
@@ -132,6 +163,12 @@ public class HistoryBusiness {
 		return resultToBooksWithUser;
 	}
 
+	/**
+	 * 
+	 * @param idUser id do utlizadordo qual se pretende saber o historial de requisições de
+	 * livros
+	 * @return todos os históricos associados a este user
+	 */
 	public ArrayList<History> getAllHstoryOfUser(long idUser) {
 		ArrayList<History> resultAllHistory = new ArrayList<History>();
 		for (History item : historyRepository.getAll()) {
@@ -142,6 +179,12 @@ public class HistoryBusiness {
 		return resultAllHistory;
 	}
 
+	/**
+	 * 
+	 * @param userId id do user cuja reserva se pretende cancelar
+	 * @param bookId id do livro cuja reserva se pretende cancelar
+	 * @return o histórico cancelado
+	 */
 	@Transactional
 	public History cancelReservation(long userId, long bookId) {
 		History reservationToCancel = null;
@@ -186,6 +229,10 @@ public class HistoryBusiness {
 		return null;
 	}
 
+	/**
+	 * 
+	 * @return todosos históricos desta biblioteca
+	 */
 	public ArrayList<History> getAllHistorys() {
 		ArrayList<History> resultAllHistorys = new ArrayList<History>();
 		if (historyRepository.getAll() != null) {
@@ -198,6 +245,10 @@ public class HistoryBusiness {
 
 	}
 
+	/**
+	 * 
+	 * @return um exemplo de um livro por cada isbn associado aos cinco livros mais lidos
+	 */
 	public ArrayList<BookDTO> getFiveMostReadIsbns() {
 		ArrayList<BookDTO> bookDTOList=new ArrayList<BookDTO>();
 		ArrayList<String >isbnList=new ArrayList<String>();
@@ -229,7 +280,11 @@ public class HistoryBusiness {
 		
 	}
 
-	
+	/**
+	 * 
+	 * @param bookDTOList lista de livros (agrupados pelo seu isbn)
+	 * @return lista livros (organizados pelo seu isbn) reorgnizados
+	 */
 
 	private ArrayList<BookDTO> rearranjeArrayList(ArrayList<BookDTO> bookDTOList) {
 		for(int i=1;i<bookDTOList.size();i++) {
@@ -242,6 +297,14 @@ public class HistoryBusiness {
 		return bookDTOList;
 	}
 
+	/**
+	 * 
+	 * @param bookDTOList lista de livros agrupados pelo seu isbn
+	 * @return true caso o array se encontre organizado por ordem decrescente de número
+	 * de históricos associados a cada grupo de livros associados pelo seu isbn e false caso
+	 * contrário
+	 * 
+	 */
 	private boolean arrayIsInDescendingOrder(ArrayList<BookDTO> bookDTOList) {
 		for(int i=1;i<bookDTOList.size();i++) {
 			if(bookDTOList.get(i).getEntriesNumberInHistoryRepository()>bookDTOList.get(i-1).getEntriesNumberInHistoryRepository()) {
@@ -251,6 +314,13 @@ public class HistoryBusiness {
 		return true;
 	}
 
+	/**
+	 * 
+	 * @param isbn atributo do livro a partir do qual se pretende obter a lista de
+	 * livros não disponíveis 
+	 * @return todos os livros da biblioteca não disponíveis para reserva associados
+	 * a este isbn
+	 */
 	private ArrayList<Book> getAllUnavailableBooks(String isbn) {
 		ArrayList<Book> unavailableBooks=new ArrayList<Book>();
 		for(Book item:bookRepository.getAll()) {
@@ -261,6 +331,13 @@ public class HistoryBusiness {
 		return unavailableBooks;
 	}
 
+	/**
+	 * 
+	 * @param isbn atributo do livro a partir do qual se pretende obter a lista de
+	 * livros disponíveis
+	 * @return todos os livros da biblioteca disponíveis para reserva associados
+	 * a este isbn
+	 */
 	private ArrayList<Book> getAllAvailableBooks(String isbn) {
 		ArrayList<Book> allAvailableBooks=new ArrayList<Book>();
 		for(Book item:bookRepository.getAll()) {
@@ -281,6 +358,13 @@ public class HistoryBusiness {
 		return isbnList;
 	}
 
+	/**
+	 * 
+	 * @param isbn string cuja exitência se pretene verificar
+	 * @param isbnList ArrayList para o qual se pretende verificar a existência da string
+	 * @return true caso a string isbn se encontre no ArrayList isbnList e false caso
+	 * contrário
+	 */
 	private boolean thereIsNoSuchIsbn(String isbn, ArrayList<String> isbnList) {
 		if(!isbnList.isEmpty()) {
 			for(String item:isbnList) {
@@ -292,6 +376,12 @@ public class HistoryBusiness {
 		return true;
 	}
 
+	/**
+	 * 
+	 * @param indexToStart índice da lista total de históricos a partir do qual se devolve
+	 * @param amount número  de históricos a devolver
+	 * @return lista de históricos limitada pela amount e pelo indexToStart
+	 */
 	public ArrayList<History> getACertainAmountOfHistorysFromACertainIndex(int indexToStart, int amount) {
 		ArrayList<History> allHistorys=new ArrayList<History>();
 		ArrayList<History> smallArrayListHistorys=new ArrayList<History>();
