@@ -553,7 +553,7 @@ public class UserBusiness {
 	/**
 	 * 
 	 * @param indexToStart índice do ArryList contendo todos os utlizadores
-	 * @param amount número de utilizadores a devoler
+	 * @param amount número de utilizadores a devolver
 	 * @return uma lista de composta de amount utilizadores começando no indexToStart
 	 */
 	public ArrayList<User> getACertainAmountOfUsersFromACertainIndex(int indexToStart, int amount) {
