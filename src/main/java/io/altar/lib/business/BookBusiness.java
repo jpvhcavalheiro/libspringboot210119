@@ -166,6 +166,12 @@ public class BookBusiness {
 
 	}
 
+	/**
+	 * 
+	 * @param titleToTest parte do  título a partir do qual se pretende fazer
+	 * a pesquisa da lista dos livros
+	 * @return lista dos livros (agrupados por isbn) cujo título contéma string fornecida
+	 */
 	public ArrayList<BookDTO> researchBookByTitle(String titleToTest) {
 		ArrayList<BookDTO> resultToTitleToTest = new ArrayList<BookDTO>();
 		ArrayList<BookDTO> allBookDTOs = getAllBooksByISbnSpecial();
@@ -186,6 +192,12 @@ public class BookBusiness {
 		}
 		return resultToTitleToTest;
 	}
+	/**
+	 * 
+	 * @param bookDescriptionToTest parte da descrição a partir da qual se pretende
+	 * fazer a pesquisa
+	 * @return lista de livros cuja descrição contem a string fornecida
+	 */
 
 	public ArrayList<BookDTO> researchBookByDescription(String bookDescriptionToTest) {
 		ArrayList<BookDTO> allBookDTOs = getAllBooksByISbnSpecial();
@@ -208,6 +220,12 @@ public class BookBusiness {
 		return resultToDescriptionToTest;
 	}
 
+	/**
+	 * 
+	 * @param authorToTest parte do nome do autor ou autores a partir do qual se 
+	 * pretende fazer a pesquisa
+	 * @return lista de livros (agrupados por isbn) cujo autor contem a string fornecida
+	 */
 	public ArrayList<BookDTO> researchBookByAuthor(String authorToTest) {
 		ArrayList<BookDTO> allBookDtos = getAllBooksByISbnSpecial();
 		ArrayList<BookDTO> resultToAuthorToTest = new ArrayList<BookDTO>();
@@ -229,6 +247,12 @@ public class BookBusiness {
 		return resultToAuthorToTest;
 	}
 
+	/**
+	 * 
+	 * @param topicToTest parte do nome do tópico a partir do qual se pretende fazer
+	 * a pesuisa
+	 * @return lista de livros (agrupados por isbn) cujo tópico contema string fornecida
+	 */
 	public ArrayList<BookDTO> researchBookByTopic(String topicToTest) {
 		ArrayList<BookDTO> allBookDtos = getAllBooksByISbnSpecial();
 		ArrayList<BookDTO> resultToTopicToTest = new ArrayList<BookDTO>();
@@ -250,6 +274,10 @@ public class BookBusiness {
 		return resultToTopicToTest;
 	}
 
+	/**
+	 * 
+	 * @return lista de livros disponíveis para reserva
+	 */
 	public ArrayList<Book> getAllAvailableBooks() {
 		ArrayList<Book> resultToAvailableBooks = new ArrayList<Book>();
 		for (Book item : bookRepository.getAll()) {
@@ -260,6 +288,12 @@ public class BookBusiness {
 		return resultToAvailableBooks;
 	}
 
+	/**
+	 * 
+	 * @param ISBNToTest parte do isbn a partir do qual se pretende fazer a pesquisa de
+	 * lista de livros
+	 * @return lista de livros (agrupados por isbn) cujo isbn contem a string fornecida
+	 */
 	public ArrayList<Book> researchBookByISBN(String ISBNToTest) {
 		ArrayList<Book> resultISBNToTest = new ArrayList<Book>();
 		for (Book item : bookRepository.getAll()) {
@@ -270,6 +304,10 @@ public class BookBusiness {
 		return resultISBNToTest;
 	}
 
+	/**
+	 * 
+	 * @return lista de livros da biblioteca agrupdos por isbn
+	 */
 	public ArrayList<BookDTO> getAllBooksByISbnSpecial() {
 		ArrayList<BookDTO> bookDTOList = new ArrayList<BookDTO>();
 		ArrayList<String> isbnList = new ArrayList<String>();
@@ -287,6 +325,11 @@ public class BookBusiness {
 		return bookDTOList;
 	}
 
+	/**
+	 * 
+	 * @param isbn valor do atributo isbn a partir do qual se pretende fazer a pesquisa
+	 * @return lista de livros indisponíveis cujo isbn é igual à string fornecida
+	 */
 	private ArrayList<Book> getAllUnavailableBooksWithThisIsbn(String isbn) {
 		ArrayList<Book> booksWithThisIsbnAndUnavailable = new ArrayList<Book>();
 		if (bookRepository.getAll() != null) {
@@ -301,6 +344,11 @@ public class BookBusiness {
 		return booksWithThisIsbnAndUnavailable;
 	}
 
+	/**
+	 * 
+	 * @param isbn valor do atributo isbn a partir do qual se pretende fazer a pesquisa
+	 * @return lista de livros disponíveis cujo isbn é igual à string fornecida
+	 */
 	private ArrayList<Book> getAllAvailableBooksWithThisIsbn(String isbn) {
 		ArrayList<Book> booksWithThisIsbnAndAvailable = new ArrayList<Book>();
 		if (bookRepository.getAll() != null) {
@@ -314,6 +362,10 @@ public class BookBusiness {
 		return booksWithThisIsbnAndAvailable;
 	}
 
+	/**
+	 * 
+	 * @return a lista dos diferentes isbns presentes nos livros da biblioteca
+	 */
 	private ArrayList<String> obtainIsbnList() {
 		ArrayList<String> isbnList = new ArrayList<String>();
 		if (bookRepository.getAll() != null) {
@@ -326,6 +378,13 @@ public class BookBusiness {
 		return isbnList;
 	}
 
+	/**
+	 * 
+	 * @param isbn string cuja existência pretende ser verificada
+	 * @param isbnList ArrayList no qual a existência da string isnbn pretende
+	 * ser verificada
+	 * @return true caso exista o string no ArrayList fornecido e false caso contrário
+	 */
 	private boolean thereIsNoSuchIsbn(String isbn, ArrayList<String> isbnList) {
 		if (!isbnList.isEmpty()) {
 			for (String item : isbnList) {
@@ -337,6 +396,13 @@ public class BookBusiness {
 		return true;
 	}
 
+	/**
+	 * 
+	 * @param indexToStart índice a partir do qual se retorna a lista de livros
+	 * @param amount quantidade de livros agrupados pelo seu isbn a retornar
+	 * @return uma quantidade limitada (amount) de livros (agrupados por isbn) começando no
+	 * indexToStart 
+	 */
 	public ArrayList<BookDTO> getACertainAmountOfBookDTOFromACertainIndex(int indexToStart, int amount) {
 		ArrayList<BookDTO> allBookDTOs=new ArrayList<BookDTO>();
 		ArrayList<BookDTO> smallArrayListBookDTO=new ArrayList<BookDTO>();
