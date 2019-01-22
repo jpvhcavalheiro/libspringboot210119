@@ -30,6 +30,11 @@ public class UserBusiness {
 	@Inject
 	HistoryRepository historyRepository;
 
+	/**
+	 * 
+	 * @param input user que se pretende criar
+	 * @return user criado a partir da base de dados
+	 */
 	@Transactional
 	public User createUser(User input) {
 		input.setFavouriteIsbns(new ArrayList<String>());
@@ -48,6 +53,11 @@ public class UserBusiness {
 		return userRepository.save(input);
 	}
 
+	/**
+	 * 
+	 * @param userId id do utilizador do qual se pretende obter informação
+	 * @return null se o não existir o utilizador e o user caso contrário
+	 */
 	public User getUser(long userId) {
 		User temp = searchUserById(userId);
 		if (temp != null) {
@@ -57,6 +67,11 @@ public class UserBusiness {
 		}
 	}
 
+	/**
+	 * 
+	 * @param userIdWhoseReservationsAreToBeCancelled id do utilizador cujas reservas
+	 * se pretende cancelar
+	 */
 	@Transactional
 	public void cancelReservations(long userIdWhoseReservationsAreToBeCancelled) {
 		Date dateWhenReservationIsCancelled = new Date();
@@ -77,6 +92,11 @@ public class UserBusiness {
 		}
 	}
 
+	/**
+	 * 
+	 * @param bookId id do livro do qual se pretende transformar a pré-reserva em
+	 * reserva
+	 */
 	@Transactional
 	private void prereservationOfThisBookTurnReservationsOfThisBook(long bookId) {
 		Date newDate = new Date();
@@ -89,6 +109,12 @@ public class UserBusiness {
 		}
 	}
 
+	/**
+	 * 
+	 * @param bookId id do livro do qual se pretende descobrir se existe uma pré-reserva
+	 * associada
+	 * @return true caso exista uma pré-reserva deste livro e false caso contrário
+	 */
 	@Transactional
 	private boolean isThereAPrereservationOfThisBook(long bookId) {
 		for (History item : historyRepository.getAll()) {
@@ -99,6 +125,10 @@ public class UserBusiness {
 		return false;
 	}
 
+	/**
+	 * 
+	 * @param userId id do utilizador do qual se pretende cancelar a pré-reserva
+	 */
 	@Transactional
 	public void cancelPrereservations(long userId) {
 		Date newDate = new Date();
@@ -112,6 +142,14 @@ public class UserBusiness {
 		}
 	}
 
+	/**
+	 * 
+	 * @param userId id do utilizador para o qual se pretende mudar o estado (reactivar ou
+	 * banir)
+	 * @param newUserState boolean que assume o valor de true caso se queira reactivar o
+	 * utilizador e false caso se queira banir
+	 * @return o utlizador que foi reactivado ou banido
+	 */
 	@Transactional
 	public User changeUserActiveState(long userId, boolean newUserState) {
 		User user = userRepository.findById(userId);
@@ -130,6 +168,11 @@ public class UserBusiness {
 		return userRepository.findById(userId);
 	}
 
+	/**
+	 * 
+	 * @param userId id do utlizador para o qual se pretende obter e dar como perdidos os
+	 * livros que foram levantados mas não devolvidos
+	 */
 	@Transactional
 	private void cancelBooksInUseButNotReturned(long userId) {
 		Date newDate = new Date();
@@ -145,6 +188,10 @@ public class UserBusiness {
 		}
 	}
 
+	/**
+	 * 
+	 * @param bookId id do livro para o qual se pretende cancelar as pré-reservas
+	 */
 	private void cancelPrereservations(long bookId, String string) {
 		Date newDate = new Date();
 		for (History item : historyRepository.getAll()) {
@@ -160,7 +207,7 @@ public class UserBusiness {
 	}
 
 	/**
-	 * Update de todos os parametrosdo utilizador
+	 * Update de todos os parâmetros do utilizador
 	 * 
 	 * @param input
 	 * @return
@@ -187,6 +234,13 @@ public class UserBusiness {
 		return null;
 	}
 
+	/**
+	 * 
+	 * @param email atributo do utilizador
+	 * @param userId id do utilizador
+	 * @return true casoexita algum outro utilizador com o mesmo email e false 
+	 * caso contrário
+	 */
 	@Transactional
 	private boolean thereIsAnotherEmailLikeThis(String email, long userId) {
 		for(User item:userRepository.getAll()) {
@@ -274,6 +328,11 @@ public class UserBusiness {
 		return listToBeReturned;
 	}
 
+	/**
+	 * Verifica se um utilizador foi banido
+	 * @param userIdToTest id do utlizador
+	 * @return true caso o utilizador esteja activo e falso caso tenha sido banido
+	 */
 	@Transactional
 	public boolean isUserActive(long userIdToTest) {
 		User userToTest = userRepository.findById(userIdToTest);
@@ -305,6 +364,12 @@ public class UserBusiness {
 		return null;
 	}
 
+	/**
+	 * 
+	 * @param idUser id od utilizador
+	 * @param isbn atributo do livro
+	 * @return adiciona este isbn ä lista de favoritos associado ao idUser
+	 */
 	@Transactional
 	public User addBookToFavourites(long idUser, String isbn) {
 		if(userRepository.findById(idUser)==null) {
@@ -327,6 +392,11 @@ public class UserBusiness {
 
 	}
 
+	/**
+	 * 
+	 * @param isbn numero de identificação do tipo de livro
+	 * @return true caso exista algum livro com este isbn e false caso contrário
+	 */
 	private boolean thereIsThisIsbn(String isbn) {
 		for(Book item:bookRepository.getAll()) {
 			if(item.getIsbn().equals(isbn)) {
@@ -336,6 +406,12 @@ public class UserBusiness {
 		return false;
 	}
 
+	/**
+	 * 
+	 * @param isbn número de identificação do livro
+	 * @param favouritesList lista de isbns associado a um determinado utlizador
+	 * @return true caso este isbn exista na favouritesList e false caso contrário
+	 */
 	@Transactional
 	public boolean isfavourite(String isbn, List<String> favouritesList) {
 		if(favouritesList==null) {
@@ -352,6 +428,11 @@ public class UserBusiness {
 
 	}
 
+	/**
+	 * 
+	 * @param idUser id do utlizador
+	 * @return um exemplo de livro por cada isbn favorito do utilizador cujo id é idUser
+	 */
 	public List<Book> getAllFavourites(long idUser) {
 		User user=userRepository.findById(idUser);
 		if(user==null) {
@@ -370,6 +451,11 @@ public class UserBusiness {
 		return allFavouriteBooks;
 	}
 
+	/**
+	 * 
+	 * @param isbn número d eidentificão do livro
+	 * @return um livro com este isbn
+	 */
 	private Book getABook(String isbn) {
 		for(Book item:bookRepository.getAll()) {
 			if(item.getIsbn().equals(isbn) && item.isInLibraryPosession()) {
@@ -380,6 +466,12 @@ public class UserBusiness {
 		
 	}
 
+	/**
+	 * 
+	 * @param idUser id do utilizador
+	 * @param isbn número de identificação do livro
+	 * @return o utilizador cujo favorito associado ao isbn foi removido
+	 */
 	@Transactional
 	public User removeFavourite(long idUser, String isbn) {
 		User user = userRepository.findById(idUser);
@@ -394,6 +486,13 @@ public class UserBusiness {
 		return null;
 	}
 
+	/**
+	 * 
+	 * @param userEmail email do utilizador
+	 * @param userPassword password do utilizador
+	 * @return o próprio utilizador caso o userEmail corresponda ao userPassword e null caso
+	 * contrário
+	 */
 	public User loginUser(String userEmail, String userPassword) {
 		for (User item : userRepository.getAll()) {
 			if (isUserActive(item.getId())) {
@@ -451,6 +550,12 @@ public class UserBusiness {
 		}
 	}*/
 
+	/**
+	 * 
+	 * @param indexToStart índice do ArryList contendo todos os utlizadores
+	 * @param amount número de utilizadores a devoler
+	 * @return uma lista de composta de amount utilizadores começando no indexToStart
+	 */
 	public ArrayList<User> getACertainAmountOfUsersFromACertainIndex(int indexToStart, int amount) {
 		ArrayList<User> allUsers=new ArrayList<User>();
 		ArrayList<User> smallArrayListUsers=new ArrayList<User>();
